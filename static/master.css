@@ -1,0 +1,30 @@
+/*static/master.css*/
+
+h1 {
+  color: white;
+  font-size: 46px;
+}
+
+a {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: white;
+  font-size: 32px;
+  background: darkred;
+  border-style: none;
+  border-radius: 5px;
+}
+
+a:hover {
+  color: darkred;
+  background: white;
+}
+
+a:active {
+  text-decoration: underline;
+}
+
+body {
+  text-align: center;
+  background: black;
+}
