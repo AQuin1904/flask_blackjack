@@ -1,10 +1,14 @@
-from flask import Flask, render_template
-app = Flask(__name__)
+from Deck import Deck
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+class Blackjack:
+    def __init__(self):
+        self.deck = Deck()
+        self.deck.shuffle()
+        self.player_hand = []
+        self.com_hand = []
 
-@app.route('/play')
-def play():
-    return 'WORK IN PROGRESS'
+    def deal(self):
+        self.com_hand.append(self.deck.draw())
+        self.player_hand.append(self.deck.draw())
+        self.com_hand.append(self.deck.draw())
+        self.player_hand.append(self.deck.draw())
