@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Simple Blackjack</title>
+    <link rel="stylesheet" href="/static/master.css">
+  </head>
+  <body>
+    <h1>Simple Blackjack</h1>
+    <div class="hands">
+      <div class="hand">
+        <h3>Dealer</h3>
+        <p>{{ dealer_hand }}</p>
+      </div>
+      <div class="hand">
+        <h3>You</h3>
+        <p>{{ player_hand }}</p>
+      </div>
+    </div>
+    <a href="/play">{{ action }}</a>
+  </body>
+</html>

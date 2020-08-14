@@ -24,6 +24,10 @@ a:active {
   text-decoration: underline;
 }
 
+.hand {
+  color: white;
+}
+
 body {
   text-align: center;
   background: black;

@@ -3,7 +3,7 @@ from random import shuffle
 
 class Deck:
     Card = namedtuple('Card', ['rank', 'suit'])
-    __ranks = ['ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'king', 'queen']
+    __ranks = ['ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'queen', 'king']
     __suits = ['hearts', 'clubs', 'diamonds', 'spades']
 
     def __init__(self):
