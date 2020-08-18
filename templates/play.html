@@ -17,6 +17,6 @@
         <p>{{ player_hand }}</p>
       </div>
     </div>
-    <a href="/play?next={{ action }}">{{ action }}</a>
+    {{ action | safe }}
   </body>
 </html>

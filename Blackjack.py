@@ -7,7 +7,7 @@ class Blackjack:
         self.deck = Deck()
         self.deck.shuffle()
         self.player = Player()
-        self.dealer = Player(com=True)
+        self.dealer = Player()
 
     def total_hand(self, player):
         ace_1 = 0
@@ -40,3 +40,9 @@ class Blackjack:
     def hit(self, player):
         player.hand.append(self.deck.draw())
         self.total_hand(player)
+
+    def dealer_act(self):
+        if self.dealer.total < 17:
+            self.hit(self.dealer)
+        else:
+            self.dealer.stand = True

@@ -12,16 +12,25 @@ def index():
 def play():
     global bj
     next = request.args.get('next', '')
+    action_t = '<a href="/play?next={act}">{act}</a>'
     if next == '':
-        action = 'deal'
+        action = action_t.format(act='deal')
     elif next == 'deal':
         bj.deal()
-        action = 'hit'
+        action = (action_t.format(act='hit')
+                 + action_t.format(act='stand'))
     elif next == 'hit':
+        bj.dealer_act()
         bj.hit(bj.player)
-        action = 'hit'
+        action = (action_t.format(act='hit')
+                 + action_t.format(act='stand'))
+    elif next == 'stand':
+        bj.dealer_act()
+        bj.player.stand = True
+        action = action_t.format(act='stand')
     else:
-        action = 'hit'
+        action = (action_t.format(act='hit')
+                 + action_t.format(act='stand'))
     return render_template('play.html',
                            dealer_hand=bj.dealer.hand,
                            player_hand=bj.player.hand,
