@@ -31,6 +31,13 @@ def play():
     else:
         action = (action_t.format(act='hit')
                  + action_t.format(act='stand'))
+    winner = bj.check_winner()
+    if winner == bj.dealer:
+        action = ('<h3>Dealer wins!<br>Play again?</h3>'
+                 + action_t.format(act='deal'))
+    elif winner == bj.player:
+        action = ('<h3>You win!<br>Play again?</h3>'
+                 + action_t.format(act='deal'))
     return render_template('play.html',
                            dealer_hand=bj.dealer.hand,
                            player_hand=bj.player.hand,

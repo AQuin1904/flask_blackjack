@@ -30,6 +30,8 @@ class Blackjack:
 
 
     def deal(self):
+        self.player = Player()
+        self.dealer = Player()
         self.dealer.hand.append(self.deck.draw())
         self.player.hand.append(self.deck.draw())
         self.dealer.hand.append(self.deck.draw())
@@ -46,3 +48,16 @@ class Blackjack:
             self.hit(self.dealer)
         else:
             self.dealer.stand = True
+
+    def check_winner(self):
+        if self.player.total > 21 or self.dealer.total == 21:
+            return self.dealer
+        elif self.dealer.total > 21 or self.player.total == 21:
+            return self.player
+        elif self.dealer.stand and self.player.stand:
+            if self.dealer.total >= self.player.total:
+                return self.dealer
+            else:
+                return self.player
+        else:
+            return False

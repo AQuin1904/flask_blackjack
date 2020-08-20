@@ -5,6 +5,10 @@ h1 {
   font-size: 46px;
 }
 
+h3 {
+  color: white;
+}
+
 a {
   padding: 10px 20px;
   text-decoration: none;
