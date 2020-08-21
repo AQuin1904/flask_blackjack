@@ -10,13 +10,15 @@
     <div class="hands">
       <div class="hand">
         <h3>Dealer</h3>
-        <p>{{ dealer_hand }}</p>
+        <p>{{ dealer_hand | safe }}</p>
       </div>
       <div class="hand">
         <h3>You</h3>
-        <p>{{ player_hand }}</p>
+        <p>{{ player_hand | safe }}</p>
       </div>
     </div>
-    {{ action | safe }}
+    <div class="action">
+      {{ action | safe }}
+    </div>
   </body>
 </html>
