@@ -1,20 +1,21 @@
 import unittest
-from Deck import Deck
-from Player import Player
-from Blackjack import Blackjack
+from app.game.Deck import Deck
+from app.game.Player import Player
+from app.game.Blackjack import Blackjack
+from app.game.Card import Card
 
 class TestDeck(unittest.TestCase):
-    ranks = ['ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'queen', 'king']
-    suits = ['hearts', 'clubs', 'diamonds', 'spades']
+    def setUp(self):
+        self.d = Deck()
+
     def test_deck(self):
-        d = Deck()
-        self.assertEqual(len(d.cards), 52)
-        for rank in self.ranks:
-            self.assertEqual(sum((c.rank == rank) for c in d.cards), 4)
-        for suit in self.suits:
-            self.assertEqual(sum((c.suit == suit) for c in d.cards), 13)
-        d = Deck([Deck.Card('ace', 'hearts')])
-        self.assertEqual(len(d.cards), 1)
+        self.assertEqual(len(self.d.cards), 52)
+        for rank in Deck.__ranks__:
+            self.assertEqual(sum((c.rank == rank) for c in self.d.cards), 4)
+        for suit in Deck.__suits__:
+            self.assertEqual(sum((c.suit == suit) for c in self.d.cards), 13)
+        self.d = Deck([Card('ace', 'hearts')])
+        self.assertEqual(len(self.d.cards), 1)
 
     def test_draw(self):
         d = Deck()
@@ -24,45 +25,130 @@ class TestDeck(unittest.TestCase):
         self.assertEqual(len(d.cards), 51)
         # Only a new deck object holds 52 cards
         self.assertEqual(len(d.draw()), 2)
-        d = Deck([Deck.Card('ace', 'hearts'), Deck.Card('king', 'clubs')])
+        d = Deck([Card('ace', 'hearts'), Card('king', 'clubs')])
         c = d.draw()
         self.assertTrue(c.rank == 'king' and c.suit == 'clubs')
 
+    def tearDown(self):
+        del self.d
+
 class TestPlayer(unittest.TestCase):
+    def setUp(self):
+        self.p = Player()
+
     def test_player(self):
-        p = Player()
-        self.assertEqual(len(p.hand), 0)
-        self.assertEqual(p.total, 0)
-        self.assertEqual(p.stand, False)
-        p = Player([Deck.Card('ace', 'hearts')], 11, True)
-        self.assertEqual(len(p.hand), 1)
-        self.assertEqual(p.total, 11)
-        self.assertEqual(p.stand, True)
+        self.assertEqual(len(self.p.hand), 0)
+        self.assertEqual(self.p.total, 0)
+        self.assertEqual(self.p.stand, False)
+        self.p = Player([Card('ace', 'hearts')], 11, True)
+        self.assertEqual(len(self.p.hand), 1)
+        self.assertEqual(self.p.total, 11)
+        self.assertEqual(self.p.stand, True)
+
+    def tearDown(self):
+        del self.p
 
 class TestBlackjack(unittest.TestCase):
+    def setUp(self):
+        self.bj = Blackjack()
+
     def test_blackjack(self):
-        bj = Blackjack()
-        self.assertTrue(True)
+        self.assertEqual(len(self.bj.deck.cards), 52)
+        self.assertEqual(len(self.bj.player.hand), 0)
+        self.assertEqual(len(self.bj.dealer.hand), 0)
+        self.assertEqual(self.bj.player.total, 0)
+        self.assertEqual(self.bj.dealer.total, 0)
+        self.assertFalse(self.bj.player.stand)
+        self.assertFalse(self.bj.dealer.stand)
+        self.bj = Blackjack(
+                            p_hand=[Card('ace', 'hearts')],
+                            p_total=11,
+                            p_stand=True
+                           )
+        self.assertEqual(len(self.bj.player.hand), 1)
+        self.assertEqual(len(self.bj.dealer.hand), 0)
+        self.assertEqual(self.bj.player.total, 11)
+        self.assertEqual(self.bj.dealer.total, 0)
+        self.assertTrue(self.bj.player.stand)
+        self.assertFalse(self.bj.dealer.stand)
 
     def test_total_hand(self):
-        bj = Blackjack()
-        self.assertTrue(True)
+        # Blackjack, 21
+        hand_1 = [Card('ace', 'hearts'), Card('king', 'hearts')]
+        # four aces, 14
+        hand_2 = [
+                  Card('ace', 'hearts'),
+                  Card('ace', 'diamonds'),
+                  Card('ace', 'clubs'),
+                  Card('ace', 'spades'),
+                 ]
+        # four aces and a court card, 14
+        hand_3 = [
+                  Card('ace', 'hearts'),
+                  Card('ace', 'diamonds'),
+                  Card('ace', 'clubs'),
+                  Card('ace', 'spades'),
+                  Card('jack', 'diamonds')
+                 ]
+        # one whole suit, 85
+        hand_4 = [
+                  Card('ace', 'hearts'),
+                  Card(2, 'hearts'),
+                  Card(3, 'hearts'),
+                  Card(4, 'hearts'),
+                  Card(5, 'hearts'),
+                  Card(6, 'hearts'),
+                  Card(7, 'hearts'),
+                  Card(8, 'hearts'),
+                  Card(9, 'hearts'),
+                  Card(10, 'hearts'),
+                  Card('jack', 'hearts'),
+                  Card('queen', 'hearts'),
+                  Card('king', 'hearts'),
+                 ]
+        # an empty hand, 0
+        hand_5 = []
+        self.bj.player.hand = hand_1
+        self.bj.total_hand(self.bj.player)
+        self.assertEqual(self.bj.player.total, 21)
+        self.bj.dealer.hand = hand_2
+        self.bj.total_hand(self.bj.dealer)
+        self.assertEqual(self.bj.dealer.total, 14)
+        self.bj.player.hand = hand_3
+        self.bj.total_hand(self.bj.player)
+        self.assertEqual(self.bj.player.total, 14)
+        self.bj.dealer.hand = hand_4
+        self.bj.total_hand(self.bj.dealer)
+        self.assertEqual(self.bj.dealer.total, 85)
+        self.bj.player.hand = hand_5
+        self.bj.total_hand(self.bj.player)
+        self.assertEqual(self.bj.player.total, 0)
 
     def test_deal(self):
-        bj = Blackjack()
-        self.assertTrue(True)
+        self.bj.deal()
+        self.assertEqual(len(self.bj.player.hand), 2)
+        self.assertEqual(len(self.bj.dealer.hand), 2)
+        # test that deal() properly resets players
+        self.bj.hit(self.bj.player)
+        self.bj.player.stand = True
+        self.bj.deal()
+        self.assertEqual(len(self.bj.player.hand), 2)
+        self.assertEqual(len(self.bj.dealer.hand), 2)
+        self.assertFalse(self.bj.player.stand)
 
     def test_hit(self):
-        bj = Blackjack()
-        self.assertTrue(True)
+        self.bj.hit(self.bj.player)
+        self.assertEqual(len(self.bj.player.hand), 1)
+        self.assertTrue(self.bj.player.total > 0)
 
     def test_dealer_act(self):
-        bj = Blackjack()
         self.assertTrue(True)
 
     def test_check_winner(self):
-        bj = Blackjack()
         self.assertTrue(True)
+
+    def tearDown(self):
+        del self.bj
 
 if __name__ == '__main__':
     unittest.main()

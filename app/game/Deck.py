@@ -1,5 +1,6 @@
-from collections import namedtuple
+# flask_blackjack/app/game/Deck.py
 from random import shuffle
+from .Card import Card
 
 class Deck:
     '''
@@ -21,9 +22,8 @@ class Deck:
         Generates a new, shuffled deck of 52 cards
         By default, called automatically only when the deck is empty
     '''
-    Card = namedtuple('Card', ['rank', 'suit'])
-    __ranks = ['ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'queen', 'king']
-    __suits = ['hearts', 'clubs', 'diamonds', 'spades']
+    __ranks__ = ['ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'jack', 'queen', 'king']
+    __suits__ = ['hearts', 'clubs', 'diamonds', 'spades']
 
     def __init__(self, cards=None):
         '''
@@ -54,6 +54,6 @@ class Deck:
         Generates a new, shuffled deck of 52 cards
         By default, called automatically only when the deck is empty
         '''
-        self.cards = [self.Card(rank, suit) for rank in self.__ranks
-                                            for suit in self.__suits]
+        self.cards = [Card(rank, suit) for rank in self.__ranks__
+                                       for suit in self.__suits__]
         shuffle(self.cards)

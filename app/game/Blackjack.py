@@ -1,5 +1,5 @@
-from Deck import Deck
-from Player import Player
+from .Deck import Deck
+from .Player import Player
 
 class Blackjack:
     '''
@@ -31,10 +31,10 @@ class Blackjack:
     '''
     def __init__(self,
                  cards=None,
-                 p_hand=[],
+                 p_hand=None,
                  p_total=0,
                  p_stand=False,
-                 d_hand=[],
+                 d_hand=None,
                  d_total=0,
                  d_stand=False
                 ):
@@ -46,13 +46,13 @@ class Blackjack:
         ----------
         cards=None: list of Card objects
             The cards currently in the deck
-        p_hand=[]: list of Card objects
+        p_hand=None: list of Card objects
             The player's hand
         p_total=0: int
             The player's total score
         p_stand=False: bool
             Whether the player has chosen to stand in the current hand
-        d_hand=[]: list of Card objects
+        d_hand=None: list of Card objects
             The dealer's hand
         d_total=0: int
             The dealer's total score
