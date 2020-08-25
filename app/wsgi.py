@@ -1,12 +1,10 @@
 # flask_blackjack/app/wsgi.py
 from flask import Flask, session, render_template, request
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Integer, Boolean
 from uuid import uuid1
 from json import dumps, loads
 import os
+import models
+from .database import Session, engine
 from .game.Blackjack import Blackjack
 from .game.Card import Card
 from .display import cards_to_display
@@ -14,24 +12,7 @@ from .display import cards_to_display
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
 
-db_string = os.environ.get('DATABASE_URL')
-db = create_engine(db_string)
-Session = sessionmaker(db)
-db_session = Session()
-base = declarative_base()
-base.metadata.create_all(db)
-
-class BlackjackGame(base):
-    __tablename__ = 'blackjack_games'
-
-    id = Column(String, primary_key=True)
-    deck = Column(String)
-    p_hand = Column(String)
-    p_total = Column(Integer)
-    p_stand = Column(Boolean)
-    d_hand = Column(String)
-    d_total = Column(Integer)
-    d_stand = Column(Boolean)
+models.Base.metadata.create_all(bind=engine)
 
 @app.route('/')
 def index():
@@ -39,12 +20,13 @@ def index():
 
 @app.route('/play')
 def play():
+    db_session = Session()
     in_db = False
     if 'id' in session:
         game = (
                 db_session
-                .query(BlackjackGame)
-                .filter(BlackjackGame.id == session['id'])
+                .query(models.BlackjackGame)
+                .filter(models.BlackjackGame.id == session['id'])
                )
         if game.count() > 0:
             game = game[0]
@@ -102,16 +84,16 @@ def play():
         game.d_total = bj.dealer.total
         game.d_stand = bj.dealer.stand
     else:
-        game = BlackjackGame(
-                             id=session['id'],
-                             deck=dumps(bj.deck.cards),
-                             p_hand=dumps(bj.player.hand),
-                             p_total=bj.player.total,
-                             p_stand=bj.player.stand,
-                             d_hand=dumps(bj.dealer.hand),
-                             d_total=bj.dealer.total,
-                             d_stand=bj.dealer.stand
-                            )
+        game = models.BlackjackGame(
+                                    id=session['id'],
+                                    deck=dumps(bj.deck.cards),
+                                    p_hand=dumps(bj.player.hand),
+                                    p_total=bj.player.total,
+                                    p_stand=bj.player.stand,
+                                    d_hand=dumps(bj.dealer.hand),
+                                    d_total=bj.dealer.total,
+                                    d_stand=bj.dealer.stand
+                                   )
         db_session.add(game)
     db_session.commit()
 
