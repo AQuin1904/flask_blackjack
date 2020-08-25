@@ -3,7 +3,7 @@ from flask import Flask, session, render_template, request
 from uuid import uuid1
 from json import dumps, loads
 import os
-import models
+from . import models
 from .database import Session, engine
 from .game.Blackjack import Blackjack
 from .game.Card import Card
