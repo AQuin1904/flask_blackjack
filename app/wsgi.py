@@ -1,4 +1,4 @@
-# flask_blackjack/app/app.py
+# flask_blackjack/app/wsgi.py
 from flask import Flask, session, render_template, request
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
