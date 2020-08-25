@@ -7,9 +7,9 @@ from sqlalchemy import Column, String, Integer, Boolean
 from uuid import uuid1
 from json import dumps, loads
 import os
-from game.Blackjack import Blackjack
-from game.Card import Card
-from display import cards_to_display
+from .game.Blackjack import Blackjack
+from .game.Card import Card
+from .display import cards_to_display
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
