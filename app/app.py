@@ -1,21 +1,25 @@
 # flask_blackjack/app/app.py
 from flask import Flask, session, render_template, request
 from sqlalchemy import create_engine
-from sqlalchemy import Column, String, Integer, Boolean
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, Integer, Boolean
 from uuid import uuid1
 from json import dumps, loads
-from .game.Blackjack import Blackjack
-from .game.Card import Card
+import os
+from game.Blackjack import Blackjack
+from game.Card import Card
+from display import cards_to_display
 
 app = Flask(__name__)
-app.secret_key = ''
+app.secret_key = os.environ.get('SECRET_KEY')
 
-db_string = ''
-
+db_string = os.environ.get('DATABASE_URL')
 db = create_engine(db_string)
+Session = sessionmaker(db)
+db_session = Session()
 base = declarative_base()
+base.metadata.create_all(db)
 
 class BlackjackGame(base):
     __tablename__ = 'blackjack_games'
@@ -28,27 +32,6 @@ class BlackjackGame(base):
     d_hand = Column(String)
     d_total = Column(Integer)
     d_stand = Column(Boolean)
-
-Session = sessionmaker(db)
-db_session = Session()
-
-base.metadata.create_all(db)
-
-def cards_to_display(dealer, player, winner):
-    card_t = ('<div class="card">{rank} of '
-             + '<span class="{suit}">{suit}</span></div>')
-    dealer_hand = ''
-    player_hand = ''
-    if len(dealer.hand) > 0 and not winner:
-        dealer_hand += card_t.format(rank = '?', suit = '?')
-        for card in dealer.hand[1:]:
-            dealer_hand += card_t.format(rank = card.rank, suit = card.suit)
-    else:
-        for card in dealer.hand:
-            dealer_hand += card_t.format(rank = card.rank, suit = card.suit)
-    for card in player.hand:
-        player_hand += card_t.format(rank = card.rank, suit = card.suit)
-    return dealer_hand, player_hand
 
 @app.route('/')
 def index():
@@ -139,3 +122,6 @@ def play():
                            player_hand=player_hand,
                            action=action
                           )
+
+if __name__ == '__main__':
+    app.run()
