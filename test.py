@@ -142,10 +142,49 @@ class TestBlackjack(unittest.TestCase):
         self.assertTrue(self.bj.player.total > 0)
 
     def test_dealer_act(self):
-        self.assertTrue(True)
+        # dealer hits if total < 17
+        self.bj.dealer_act()
+        self.assertEqual(len(self.bj.dealer.hand), 1)
+        self.assertTrue(self.bj.dealer.total > 0)
+        self.assertFalse(self.bj.dealer.stand)
+        self.bj.dealer.total = 16
+        self.bj.dealer_act()
+        self.assertEqual(len(self.bj.dealer.hand), 2)
+        # dealer stands if total >= 17
+        self.bj.dealer.hand = []
+        self.bj.dealer.total = 17
+        self.bj.dealer_act()
+        self.assertEqual(len(self.bj.dealer.hand), 0)
+        self.assertEqual(self.bj.dealer.total, 17)
+        self.assertTrue(self.bj.dealer.stand)
 
     def test_check_winner(self):
-        self.assertTrue(True)
+        # returns false if no winner
+        self.assertFalse(self.bj.check_winner())
+        # returns dealer if dealer has 21 or player busts
+        self.bj.dealer.total = 21
+        self.assertEqual(self.bj.check_winner(), self.bj.dealer)
+        self.bj.dealer.total = 0
+        self.bj.player.total = 22
+        self.assertEqual(self.bj.check_winner(), self.bj.dealer)
+        # returns player if player has 21 or dealer busts
+        self.bj.dealer.total = 22
+        self.bj.player.total = 0
+        self.assertEqual(self.bj.check_winner(), self.bj.player)
+        self.bj.dealer.total = 20
+        self.bj.player.total = 21
+        self.assertEqual(self.bj.check_winner(), self.bj.player)
+        # returns false otherwise unless both players stand
+        self.bj.player.stand = True
+        self.bj.dealer.total = 15
+        self.bj.player.total = 10
+        self.assertFalse(self.bj.check_winner())
+        # if both players stand, returns player whose total is greater
+        self.bj.dealer.stand = True
+        self.assertEqual(self.bj.check_winner(), self.bj.dealer)
+        self.bj.dealer.total = 10
+        self.bj.player.total = 15
+        self.assertEqual(self.bj.check_winner(), self.bj.player)
 
     def tearDown(self):
         del self.bj

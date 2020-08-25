@@ -11,8 +11,9 @@ with the framework.
 - [x] Expand app to take user input via link/query string
 - [x] Expand app to display game state using HTML template
 - [x] Implement static CSS to improve readability of HTML frontend
-- [ ] Complete unit testing of classes used to model game (in progress)
-- [ ] Implement database to store and load game progress
-- [ ] Implement session tracking to allow multiple simultaneous games
-- [ ] Test session and database functionality
-- [ ] Launch app on free hosting platform
+- [x] Complete unit testing of classes used to model game
+- [x] Implement database to store and load game progress
+- [x] Implement session tracking to allow multiple simultaneous games
+- [ ] Test session and database functionality (in progress)
+- [x] Launch app on free hosting platform
+- [ ] Improve user interface using CSS framework
