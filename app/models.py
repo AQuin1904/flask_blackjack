@@ -2,7 +2,7 @@
 from sqlalchemy import Column, String, Integer, Boolean
 from .database import Base
 
-class BlackjackGame(base):
+class BlackjackGame(Base):
     __tablename__ = 'blackjack_games'
 
     id = Column(String, primary_key=True)
